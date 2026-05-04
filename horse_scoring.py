@@ -111,7 +111,27 @@ def print_table(rows):
               f"{r['last_gallop_400']:>4.1f} | {r['last_gallop_600']:>4.1f} | {r['kg_diff_lastwork']:>6.1f} | {r['jokey_match']:>6} | {r['score_start']:>6.2f}")
 
 
+def print_predictions(rows):
+    favori = [r for r in rows if r["label"] == "Favori"]
+    rakip = [r for r in rows if r["label"] == "Rakip"]
+    surpriz = [r for r in rows if r["label"] == "Sürpriz"]
+
+    print("\nTAHMINLER")
+    print("=" * 30)
+    print("Favoriler:", ", ".join(f"{r['no']}-{r['at_adi']}" for r in favori) or "Yok")
+    print("Rakipler :", ", ".join(f"{r['no']}-{r['at_adi']}" for r in rakip) or "Yok")
+    print("Surpriz  :", ", ".join(f"{r['no']}-{r['at_adi']}" for r in surpriz) or "Yok")
+
+    if len(rows) >= 2:
+        a, b = rows[0], rows[1]
+        print("\nOyun onerisi:")
+        print(f"- Ganyan: {a['no']} {a['at_adi']}")
+        print(f"- Ikili : {a['no']}-{b['no']}")
+        print(f"- Sirali Ikili: {a['no']}/{b['no']} (sigorta: {b['no']}/{a['no']})")
+
+
 if __name__ == "__main__":
     data = sample_bursa_r1()
     scored = calculate_scores(data)
     print_table(scored)
+    print_predictions(scored)
