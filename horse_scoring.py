@@ -25,13 +25,11 @@ def clip(x, lo, hi):
 
 
 def calculate_scores(rows):
-    # rows: list[dict]
     g400 = [r["last_gallop_400"] for r in rows]
     g600 = [r["last_gallop_600"] for r in rows]
     z400 = zscores(g400)
     z600 = zscores(g600)
 
-    # start gate score (low gate better)
     sorted_gates = sorted({r["start_no"] for r in rows})
     gate_index = {g: i for i, g in enumerate(sorted_gates)}
     max_i = max(len(sorted_gates) - 1, 1)
@@ -44,7 +42,6 @@ def calculate_scores(rows):
         speed_component = (-z400[i] * 0.6) + (-z600[i] * 0.4)
         score_speed = clip(22 + 6 * speed_component, 0, 35)
 
-        # HP/KG (optional)
         hp = r.get("hp")
         if hp is not None and hp > 0:
             r["hp_per_kg"] = hp / r["kilo_kosu"]
@@ -56,14 +53,13 @@ def calculate_scores(rows):
         score_city = 10 if r["city_match"] else 0
         score_start = clip(10 - gate_index[r["start_no"]] * (10 / max_i), 0, 10)
 
-        # Maiden fallback if HP missing
         if r["hp_per_kg"] is None:
             score_speed = clip(score_speed + 10, 0, 45)
             score_start = clip(score_start + 5, 0, 15)
             score_kg_dyn = clip(score_kg_dyn + 5, 0, 20)
             score_hpkg = 0
         else:
-            score_hpkg = 10  # placeholder; in mixed fields can zscore hp_per_kg
+            score_hpkg = 10
 
         r["score_speed"] = round(score_speed, 2)
         r["score_hpkg"] = round(score_hpkg, 2)
@@ -102,13 +98,16 @@ def sample_bursa_r1():
     ]
 
 
-def print_table(rows):
-    headers = ["Rnk", "No", "At", "Skor", "Etiket", "400", "600", "KgFark", "JokeyU", "StartS"]
-    print(" | ".join(headers))
-    print("-" * 92)
+def render_chat_table(rows):
+    lines = [
+        "| Sıra | No | At | Skor | Etiket | 400 | 600 | Kg Fark |",
+        "|---:|---:|---|---:|---|---:|---:|---:|",
+    ]
     for r in rows:
-        print(f"{r['rank_pred']:>3} | {r['no']:>2} | {r['at_adi']:<15} | {r['final_score']:>5.2f} | {r['label']:<7} | "
-              f"{r['last_gallop_400']:>4.1f} | {r['last_gallop_600']:>4.1f} | {r['kg_diff_lastwork']:>6.1f} | {r['jokey_match']:>6} | {r['score_start']:>6.2f}")
+        lines.append(
+            f"| {r['rank_pred']} | {r['no']} | {r['at_adi']} | {r['final_score']:.2f} | {r['label']} | {r['last_gallop_400']:.1f} | {r['last_gallop_600']:.1f} | {r['kg_diff_lastwork']:.1f} |"
+        )
+    return "\n".join(lines)
 
 
 def print_predictions(rows):
@@ -122,16 +121,9 @@ def print_predictions(rows):
     print("Rakipler :", ", ".join(f"{r['no']}-{r['at_adi']}" for r in rakip) or "Yok")
     print("Surpriz  :", ", ".join(f"{r['no']}-{r['at_adi']}" for r in surpriz) or "Yok")
 
-    if len(rows) >= 2:
-        a, b = rows[0], rows[1]
-        print("\nOyun onerisi:")
-        print(f"- Ganyan: {a['no']} {a['at_adi']}")
-        print(f"- Ikili : {a['no']}-{b['no']}")
-        print(f"- Sirali Ikili: {a['no']}/{b['no']} (sigorta: {b['no']}/{a['no']})")
-
 
 if __name__ == "__main__":
     data = sample_bursa_r1()
     scored = calculate_scores(data)
-    print_table(scored)
+    print(render_chat_table(scored))
     print_predictions(scored)
