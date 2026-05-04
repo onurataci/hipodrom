@@ -100,6 +100,7 @@ def calculate_scores(rows, race_date="04/05/2026"):
         score_jokey = 10 if r["jokey_match"] else 0
         score_city = 10 if r["city_match"] else 0
         score_start = clip(10 - gate_index[r["start_no"]] * (10 / max_i), 0, 10)
+        score_agf = clip((r.get("agf", 0) / 40) * 8, 0, 8)
 
         if r["hp_per_kg"] is None:
             score_speed = clip(score_speed + 8, 0, 43)
@@ -110,7 +111,7 @@ def calculate_scores(rows, race_date="04/05/2026"):
             score_hpkg = 10
 
         r["final_score"] = round(
-            score_speed + score_hpkg + score_kg_dyn + score_jokey + score_city + score_start + score_recency,
+            score_speed + score_hpkg + score_kg_dyn + score_jokey + score_city + score_start + score_recency + score_agf,
             2,
         )
 
@@ -123,37 +124,41 @@ def calculate_scores(rows, race_date="04/05/2026"):
 
 def sample_bursa_r1():
     return [
-        {
-            "no": 11, "at_adi": "LADY BRIDGERTON", "kilo_kosu": 55, "jokey_kosu": "T.ALICI", "start_no": 11,
-            "hp": None, "hipodrom": "Bursa",
-            "gallops": [
-                {"distance": 600, "time": 43.0, "date": "01/05/2026", "city": "Bursa", "jokey": "O.BALKAN", "kg": 54},
-                {"distance": 400, "time": 28.7, "date": "01/05/2026", "city": "Bursa", "jokey": "O.BALKAN", "kg": 54},
-                {"distance": 600, "time": 56.2, "date": "26/04/2026", "city": "Bursa", "jokey": "T.ALICI", "kg": 56},
-                {"distance": 400, "time": 28.4, "date": "26/04/2026", "city": "Bursa", "jokey": "T.ALICI", "kg": 56},
-                {"distance": 600, "time": 42.3, "date": "08/03/2026", "city": "Bursa", "jokey": "T.ALICI", "kg": 59},
-                {"distance": 400, "time": 28.0, "date": "08/03/2026", "city": "Bursa", "jokey": "T.ALICI", "kg": 59},
-            ],
-        },
-        {
-            "no": 7, "at_adi": "SAVASCI BEDIR", "kilo_kosu": 57, "jokey_kosu": "S.CETIN", "start_no": 10,
-            "hp": None, "hipodrom": "Bursa",
-            "gallops": [
-                {"distance": 600, "time": 40.8, "date": "02/05/2026", "city": "Bursa", "jokey": "S.CETIN", "kg": 57},
-                {"distance": 400, "time": 27.3, "date": "02/05/2026", "city": "Bursa", "jokey": "S.CETIN", "kg": 57},
-            ],
-        },
+        {"no":1,"at_adi":"AKSA ASLANI","kilo_kosu":57,"jokey_kosu":"Y.CENGIZ","start_no":9,"hp":None,"hipodrom":"Bursa","agf":21.03,
+         "gallops":[{"distance":600,"time":55.8,"date":"02/05/2026","city":"Bursa","jokey":"D.SENBAHAR","kg":55},{"distance":400,"time":26.3,"date":"02/05/2026","city":"Bursa","jokey":"D.SENBAHAR","kg":55},{"distance":600,"time":56.1,"date":"28/03/2026","city":"Sanliurfa","jokey":"Y.CENGIZ","kg":57}]},
+        {"no":2,"at_adi":"ASALET SAHIBI","kilo_kosu":57,"jokey_kosu":"O.GOKCE","start_no":6,"hp":None,"hipodrom":"Bursa","agf":7.05,
+         "gallops":[{"distance":600,"time":56.5,"date":"02/05/2026","city":"Bursa","jokey":"O.GOKCE","kg":54},{"distance":400,"time":27.6,"date":"02/05/2026","city":"Bursa","jokey":"O.GOKCE","kg":54}]},
+        {"no":3,"at_adi":"BARLABEY","kilo_kosu":57,"jokey_kosu":"H.TURAN","start_no":4,"hp":None,"hipodrom":"Bursa","agf":2.68,
+         "gallops":[{"distance":600,"time":58.0,"date":"01/05/2026","city":"Bursa","jokey":"H.TURAN","kg":58},{"distance":400,"time":28.4,"date":"01/05/2026","city":"Bursa","jokey":"H.TURAN","kg":58},{"distance":600,"time":42.0,"date":"22/03/2026","city":"Bursa","jokey":"M.TOKCALAR","kg":54}]},
+        {"no":4,"at_adi":"BARLIN AGA","kilo_kosu":57,"jokey_kosu":"H.KARATAS","start_no":1,"hp":None,"hipodrom":"Bursa","agf":38.04,
+         "gallops":[{"distance":600,"time":40.4,"date":"01/05/2026","city":"Bursa","jokey":"S.BASKAN","kg":59},{"distance":400,"time":26.4,"date":"01/05/2026","city":"Bursa","jokey":"S.BASKAN","kg":59}]},
+        {"no":5,"at_adi":"KOLAYSA YAKALA","kilo_kosu":57,"jokey_kosu":"MAH.TURAN","start_no":3,"hp":None,"hipodrom":"Bursa","agf":5.89,
+         "gallops":[{"distance":600,"time":57.0,"date":"01/05/2026","city":"Bursa","jokey":"A.SENBAHAR","kg":58},{"distance":400,"time":28.2,"date":"01/05/2026","city":"Bursa","jokey":"A.SENBAHAR","kg":58},{"distance":600,"time":41.5,"date":"26/04/2026","city":"Bursa","jokey":"MAH.TURAN","kg":55}]},
+        {"no":6,"at_adi":"KRAL KADIR","kilo_kosu":57,"jokey_kosu":"B.M.MIRIK","start_no":7,"hp":None,"hipodrom":"Bursa","agf":6.22,
+         "gallops":[{"distance":600,"time":56.0,"date":"01/05/2026","city":"Bursa","jokey":"O.ALTIN","kg":55},{"distance":400,"time":27.8,"date":"01/05/2026","city":"Bursa","jokey":"O.ALTIN","kg":55},{"distance":400,"time":26.8,"date":"24/04/2026","city":"Bursa","jokey":"E.OZKAN","kg":57}]},
+        {"no":7,"at_adi":"SAVASCI BEDIR","kilo_kosu":57,"jokey_kosu":"S.CETIN","start_no":10,"hp":None,"hipodrom":"Bursa","agf":6.27,
+         "gallops":[{"distance":600,"time":40.8,"date":"02/05/2026","city":"Bursa","jokey":"S.CETIN","kg":57},{"distance":400,"time":27.3,"date":"02/05/2026","city":"Bursa","jokey":"S.CETIN","kg":57},{"distance":600,"time":41.7,"date":"22/02/2026","city":"Antalya","jokey":"N.BAYDAN","kg":63}]},
+        {"no":8,"at_adi":"ALAKARTAL","kilo_kosu":55,"jokey_kosu":"S.TIRPAN","start_no":5,"hp":None,"hipodrom":"Bursa","agf":3.34,
+         "gallops":[{"distance":600,"time":56.0,"date":"01/05/2026","city":"Bursa","jokey":"APRANTI","kg":55},{"distance":400,"time":28.0,"date":"01/05/2026","city":"Bursa","jokey":"APRANTI","kg":55}]},
+        {"no":9,"at_adi":"DIKKALDIRIM","kilo_kosu":55,"jokey_kosu":"C.TASCI","start_no":2,"hp":None,"hipodrom":"Bursa","agf":1.14,
+         "gallops":[{"distance":600,"time":57.5,"date":"01/05/2026","city":"Bursa","jokey":"O.BALKAN","kg":54},{"distance":400,"time":28.5,"date":"01/05/2026","city":"Bursa","jokey":"O.BALKAN","kg":54}]},
+        {"no":10,"at_adi":"GUL MEVSIMI","kilo_kosu":55,"jokey_kosu":"E.AKPINAR","start_no":12,"hp":None,"hipodrom":"Bursa","agf":1.23,
+         "gallops":[{"distance":600,"time":44.8,"date":"30/04/2026","city":"Bursa","jokey":"F.HIM","kg":57},{"distance":400,"time":28.6,"date":"30/04/2026","city":"Bursa","jokey":"F.HIM","kg":57}]},
+        {"no":11,"at_adi":"LADY BRIDGERTON","kilo_kosu":55,"jokey_kosu":"T.ALICI","start_no":11,"hp":None,"hipodrom":"Bursa","agf":3.84,
+         "gallops":[{"distance":600,"time":43.0,"date":"01/05/2026","city":"Bursa","jokey":"O.BALKAN","kg":54},{"distance":400,"time":28.7,"date":"01/05/2026","city":"Bursa","jokey":"O.BALKAN","kg":54},{"distance":600,"time":42.3,"date":"08/03/2026","city":"Bursa","jokey":"T.ALICI","kg":59},{"distance":400,"time":28.0,"date":"08/03/2026","city":"Bursa","jokey":"T.ALICI","kg":59}]},
+        {"no":12,"at_adi":"TURQUOISE","kilo_kosu":55,"jokey_kosu":"T.YILDIZ","start_no":8,"hp":None,"hipodrom":"Bursa","agf":3.27,
+         "gallops":[{"distance":600,"time":58.6,"date":"02/05/2026","city":"Bursa","jokey":"A.SENBAHAR","kg":58},{"distance":400,"time":29.3,"date":"02/05/2026","city":"Bursa","jokey":"A.SENBAHAR","kg":58},{"distance":400,"time":27.4,"date":"30/04/2026","city":"Bursa","jokey":"A.SENBAHAR","kg":58}]},
     ]
 
 
 def render_chat_table(rows):
     lines = [
-        "| Sıra | No | At | Skor | Etiket | En iyi 400 | En iyi 600 | Son Galop KG | KG Fark |",
-        "|---:|---:|---|---:|---|---:|---:|---:|---:|",
+        "| Sıra | No | At | Skor | Etiket | AGF% | En iyi 400 | En iyi 600 | Son Galop KG | KG Fark |",
+        "|---:|---:|---|---:|---|---:|---:|---:|---:|---:|",
     ]
     for r in rows:
         lines.append(
-            f"| {r['rank_pred']} | {r['no']} | {r['at_adi']} | {r['final_score']:.2f} | {r['label']} | {r['best_400']:.1f} | {r['best_600']:.1f} | {r['last_gallop_kg']:.0f} | {r['kg_diff_lastwork']:.1f} |"
+            f"| {r['rank_pred']} | {r['no']} | {r['at_adi']} | {r['final_score']:.2f} | {r['label']} | {r.get('agf',0):.2f} | {r['best_400']:.1f} | {r['best_600']:.1f} | {r['last_gallop_kg']:.0f} | {r['kg_diff_lastwork']:.1f} |"
         )
     return "\n".join(lines)
 
